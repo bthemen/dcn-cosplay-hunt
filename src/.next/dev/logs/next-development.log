@@ -1,0 +1,19 @@
+{"timestamp":"00:00:15.621","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:16.197","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:00:16.207","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:00:19.224","source":"Server","level":"LOG","message":"○ Compiling / ..."}
+{"timestamp":"00:00:22.902","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:00:22.934","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/vercel.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:00:22.940","source":"Server","level":"WARN","message":"[browser] \"\\u001b[33mImage with src \\\"http://localhost:3000/vercel.svg\\\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \\\"auto\\\"' or 'height: \\\"auto\\\"' to maintain the aspect ratio.\\u001b[39m\""}
+{"timestamp":"00:00:22.941","source":"Browser","level":"WARN","message":"\u001b[33mImage with src \"http://localhost:3000/vercel.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio.\u001b[39m"}
+{"timestamp":"00:03:33.821","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:03:34.184","source":"Browser","level":"INFO","message":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"}
+{"timestamp":"00:03:34.292","source":"Server","level":"WARN","message":"[browser] \"\\u001b[33mImage with src \\\"http://localhost:3000/vercel.svg\\\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \\\"auto\\\"' or 'height: \\\"auto\\\"' to maintain the aspect ratio.\\u001b[39m\""}
+{"timestamp":"00:03:34.292","source":"Browser","level":"WARN","message":"\u001b[33mImage with src \"http://localhost:3000/vercel.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio.\u001b[39m"}
+{"timestamp":"00:03:34.293","source":"Browser","level":"WARN","message":"Image with src \"http://localhost:3000/vercel.svg\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."}
+{"timestamp":"00:05:29.645","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:05:29.646","source":"Server","level":"LOG","message":"✓ Compiled in 81ms"}
+{"timestamp":"00:05:30.224","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:05:33.866","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
+{"timestamp":"00:05:33.868","source":"Server","level":"LOG","message":"✓ Compiled in 29ms"}
+{"timestamp":"00:05:33.938","source":"Server","level":"LOG","message":"[Proxy Log] Intercepting request to: /"}
