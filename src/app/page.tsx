@@ -1,65 +1,129 @@
-import Image from "next/image";
+'use client';
+import React, { useState } from 'react';
 
-export default function Home() {
+/**
+ * Main Game Component
+ * Provides a mobile-first interface for the target hunting game.
+ * * Logic Flow:
+ * 1. Capture user input (code).
+ * 2. Validate input and send POST request to the server API.
+ * 3. Handle success and failure states, providing clear user feedback.
+ */
+export default function GamePage() {
+  
+  // --- Fields (State) ---
+
+  /** @state {string} inputCode - Stores the target code currently typed by the user. */
+  const [inputCode, setInputCode] = useState('');
+
+  /** @state {string} status - Stores the feedback message displayed to the user (e.g., success/error). */
+  const [status, setStatus] = useState('');
+
+  /** @state {boolean} isLoading - Prevents duplicate submissions while the API request is pending. */
+  const [isLoading, setIsLoading] = useState(false);
+
+  // --- Methods (Handlers) ---
+
+  /**
+   * handleAction
+   * Executes the API call to update the game state.
+   * * @async
+   * @throws Will throw an error if the network request fails or the server returns an error.
+   */
+  const handleAction = async () => {
+    // Reset status before attempting action
+    setStatus('Processing...');
+    setIsLoading(true);
+
+    try {
+      // Example: Using Player ID 1 for this session
+      const res = await fetch('/api/players/1/updateTargets', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ code: parseInt(inputCode) }),
+      });
+
+      // Parse the JSON response body
+      const data = await res.json();
+
+      // Check if request was successful based on status code
+      if (res.ok) {
+        setStatus('Target Eliminated! New target assigned.');
+        setInputCode(''); // Clear input on success
+      } else {
+        // Explicitly handle API-returned errors without fallbacks
+        const errorMessage = data.message || data.error || 'An unknown error occurred.';
+        setStatus(`Error: ${errorMessage}`);
+      }
+
+    } catch (err) {
+      // Handle network failures or critical fetch exceptions
+      console.error("Critical Failure in handleAction:", err);
+      setStatus('Connection error. Please check your internet and try again.');
+    } finally {
+      // Always stop loading, regardless of outcome
+      setIsLoading(false);
+    }
+  };
+
+  // --- Render (JSX) ---
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main style={{ padding: '20px', fontFamily: 'sans-serif', textAlign: 'center' }}>
+      <header>
+        <h1>Target Hunter</h1>
+        <p>Enter the code of your target to progress.</p>
+      </header>
+
+      {/* Mobile-friendly input area */}
+      <section style={{ marginTop: '40px' }}>
+        <input
+          type="number"
+          value={inputCode}
+          onChange={(e) => setInputCode(e.target.value)}
+          placeholder="Enter Target Code"
+          disabled={isLoading}
+          style={{
+            padding: '15px',
+            width: '100%',
+            maxWidth: '300px',
+            fontSize: '18px',
+            borderRadius: '8px',
+            border: '1px solid #ccc'
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+        
+        <button
+          onClick={handleAction}
+          disabled={isLoading || !inputCode}
+          style={{
+            display: 'block',
+            margin: '20px auto',
+            padding: '15px 40px',
+            backgroundColor: isLoading ? '#ccc' : '#0070f3',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '18px',
+            cursor: isLoading ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {isLoading ? 'Sending...' : 'Confirm Elimination'}
+        </button>
+
+        {/* Status display section */}
+        {status && (
+          <p style={{ 
+            fontWeight: 'bold', 
+            color: status.startsWith('Error') ? 'red' : 'green',
+            marginTop: '10px' 
+          }}>
+            {status}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        )}
+      </section>
+    </main>
   );
 }
