@@ -4,10 +4,8 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { supabase } from "@/lib/supabaseServer";
 import { targetListFromString } from "@/lib/targetList";
-import { getTargetInformation } from "@/app/actions/target";
+import { getTargetInformation, getTargetProfiles } from "@/app/actions/target";
 import HunterPage from "./hunterProfile";
-import postGameHunterProfile from "./hunterProfileClosed"
-import { getCurrentConvention } from "@/lib/common_queries";
 import HunterProfileClosed from "./hunterProfileClosed";
 
 export default async function Page({ params }) {
@@ -58,15 +56,12 @@ export default async function Page({ params }) {
 
 let targetProfiles = [];
   if (hunter?.targets) {
-    const targetIds = targetListFromString(hunter.targets)
- 
-    targetProfiles = (
-      await Promise.all(targetIds.map((id) => getTargetInformation(id, conventionId, playerUid)))
-    ).filter(Boolean);
+    targetProfiles = await getTargetProfiles(convention.id, hunter.app_uid);
   }
 
   return <HunterPage
       hunter={hunter}
+      convention={convention}
       targets={targetProfiles}
     />
 }

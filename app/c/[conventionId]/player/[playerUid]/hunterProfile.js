@@ -4,27 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import {
   Camera,
   X,
+  Search,
   UserRound,
   CircleCheck,
   CircleAlert,
   ChevronRight,
 } from "lucide-react";
-
-// This assumes fonts are already wired up globally (next/font in the root
-// layout, exposing --font-display / --font-body / --font-mono) since that's
-// what your tailwind.config.js's fontFamily.{display,body,mono} point at.
-// Nothing font-related is loaded in this file anymore.
-
-// ---------------------------------------------------------------------------
-// Backend stub. Swap this out for a real request to your capture endpoint,
-// e.g. POST /api/captures { targetId, code }. Kept here so the page works
-// end-to-end without a live API.
-// ---------------------------------------------------------------------------
-async function submitCaptureCode(targetId, code) {
-  await new Promise((resolve) => setTimeout(resolve, 650));
-  // TODO: replace with a real verification call against the target's code.
-  return { success: code.length === 4 };
-}
+import { NR_TARGETS } from "@/lib/constants";
+import { checkPlayerCode, getHunterTargetIds, getTargetInformation, requestNewTargetAssignment } from "@/app/actions/target";
+import { targetListFromString } from "@/lib/targetList";
 
 function initialsFor(name) {
   if (!name) return "??";
@@ -186,25 +174,25 @@ function CodeDigitsInput({ value, onChange, disabled, autoFocus }) {
 // ---------------------------------------------------------------------------
 function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
   const [errored, setErrored] = useState(false);
-  const showImage = Boolean(target.photoUrl) && !errored;
+  const showImage = Boolean(target?.photoUrl) && !errored;
 
   return (
     <li className="flex w-[76vw] max-w-[320px] flex-none snap-center flex-col gap-2.5 rounded-2xl border border-parchment/10 bg-ink-light p-2.5">
       <button
-        onClick={() => onOpenInfo(target.id)}
-        aria-label={`View details for ${target.character}`}
+        onClick={() => onOpenInfo(target?.app_uid)}
+        aria-label={`View details for ${target?.character}`}
         className="relative block aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-xl bg-ink"
       >
         {showImage ? (
           <img
-            src={target.photoUrl}
-            alt={target.character}
+            src={target?.photoUrl}
+            alt={target?.character}
             onError={() => setErrored(true)}
             className="h-full w-full object-cover"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center font-mono text-sm text-parchment/50">
-            {initialsFor(target.character)}
+            {initialsFor(target?.character)}
           </div>
         )}
 
@@ -220,21 +208,21 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
           </span>
         )}
         <span className="absolute inset-x-2.5 bottom-2.5 w-fit rounded-lg bg-ink/60 px-2 py-1 font-mono text-[10.5px] uppercase tracking-wide text-parchment">
-          {target.series || "Unknown series"}
+          {target?.series || "Unknown series"}
         </span>
       </button>
 
       <div>
         <h3 className="font-display text-2xl leading-none tracking-wide text-parchment">
-          {target.character || "Unidentified cosplayer"}
+          {target?.character || "Unidentified cosplayer"}
         </h3>
         <p className="mt-1 font-body text-sm text-parchment/60">
-          {target.name ? `Played by ${target.name}` : "Identity unconfirmed"}
+          {target?.name ? `Played by ${target?.name}` : "Identity unconfirmed"}
         </p>
       </div>
 
       <button
-        onClick={() => onOpenCapture(target.id)}
+        onClick={() => { onOpenCapture(target)}}
         disabled={captured}
         className={
           captured
@@ -244,6 +232,74 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
       >
         <Camera size={17} strokeWidth={2.25} />
         {captured ? "Logged" : "Capture"}
+      </button>
+    </li>
+  );
+}
+
+
+function BlankTarget({ conventionId, hunterId, onNewTargets }) {
+    
+  const [status, setStatus] = useState("idle"); // idle | loading | error
+    async function requestNewTarget() {
+    setStatus("loading");
+    try {
+      const { newTarget, targets } = await requestNewTargetAssignment(conventionId, hunterId);
+      if (newTarget) {
+        onNewTargets(targets);
+      } else {
+        setStatus("error");
+      }
+    } catch (e) {
+      setStatus("error");
+    } finally {
+      setStatus("idle");
+    }
+  }
+
+  const [errored, setErrored] = useState(false);
+
+  return (
+    <li className="flex w-[76vw] max-w-[320px] flex-none snap-center flex-col gap-2.5 rounded-2xl border border-parchment/10 bg-ink-light p-2.5">
+      <button
+        onClick={() => console.log("Hi!")}
+        aria-label={`Request new`}
+        className="relative block aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-xl bg-ink"
+      >
+        <div className="flex h-full w-full items-center justify-center font-mono text-sm text-parchment/50">
+            ??
+          </div>
+        
+
+        <span className="absolute left-2.5 top-2.5 h-5 w-5 rounded-tl-sm border-l-2 border-t-2 border-parchment/85" />
+        <span className="absolute right-2.5 top-2.5 h-5 w-5 rounded-tr-sm border-r-2 border-t-2 border-parchment/85" />
+        <span className="absolute bottom-2.5 left-2.5 h-5 w-5 rounded-bl-sm border-b-2 border-l-2 border-parchment/85" />
+        <span className="absolute bottom-2.5 right-2.5 h-5 w-5 rounded-br-sm border-b-2 border-r-2 border-parchment/85" />
+        <span className="motion-safe:animate-scan pointer-events-none absolute inset-x-0 -top-[40%] h-[40%] bg-gradient-to-b from-transparent via-sage/20 to-transparent" />
+
+        <span className="absolute inset-x-2.5 bottom-2.5 w-fit rounded-lg bg-ink/60 px-2 py-1 font-mono text-[10.5px] uppercase tracking-wide text-parchment">
+          {"Unknown series"}
+        </span>
+      </button>
+
+      <div>
+        <h3 className="font-display text-2xl leading-none tracking-wide text-parchment">
+          {"Unidentified cosplayer"}
+        </h3>
+        <p className="mt-1 font-body text-sm text-parchment/60">
+          {"Identity unconfirmed"}
+        </p>
+      </div>
+
+      <button
+        onClick={requestNewTarget}
+        disabled={status === "loading"}
+        className={
+          "flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-flare py-3 font-body text-[14.5px] font-semibold text-ink transition hover:bg-flare-dim active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flare/50 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-light"
+        }
+      >
+        <Search size={17} strokeWidth={2.25} />
+        {status === "loading" ? "Requesting…" : "Request new"}
       </button>
     </li>
   );
@@ -294,14 +350,14 @@ function TargetInfoContent({ target, onClose }) {
   );
 }
 
-function CaptureContent({ target, onClose, onSuccess }) {
+function CaptureContent({ conventionId, target, onClose, onSuccess }) {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("idle"); // idle | checking | success | error
 
   async function handleSubmit() {
     setStatus("checking");
-    const result = await submitCaptureCode(target.id, code);
-    if (result.success) {
+    const correct = await checkPlayerCode(conventionId, target.app_uid, code);
+    if (correct) {
       setStatus("success");
       onSuccess(target.id);
       setTimeout(onClose, 900);
@@ -434,21 +490,25 @@ function MissionBar({ hunter, score, photoUrl, onOpenProfile }) {
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
-export default function CosplayHunt({ convention, hunter, targets = [] }) {
+export default function HunterPage({ convention, hunter, targets }) {
   const [infoTargetId, setInfoTargetId] = useState(null);
-  const [captureTargetId, setCaptureTargetId] = useState(null);
+  const [captureTarget, setCaptureTarget] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [capturedIds, setCapturedIds] = useState(() => new Set());
   const [score, setScore] = useState(hunter?.score ?? 0);
+  const [currentTargets, setCurrentTargets] = useState(targets);
 
-  function handleCaptureSuccess(targetId) {
+  function handleCaptureSuccess(conventionId, hunterId, targetId) {
+    
     setCapturedIds((prev) => new Set(prev).add(targetId));
     setScore((s) => s + 1);
   }
 
-  const infoTarget = targets.find((t) => t.id === infoTargetId) || null;
-  const captureTarget = targets.find((t) => t.id === captureTargetId) || null;
-  const remaining = targets.filter((t) => !capturedIds.has(t.id)).length;
+  const blanksCount = Math.max(0, NR_TARGETS - currentTargets.length);
+  const displayTargets = [
+    ...currentTargets,
+    ...Array.from({ length: blanksCount }, () => undefined),
+  ];
 
   // Same route used for target photos, called once and reused everywhere
   // this hunter's own photo appears (mission bar avatar + profile modal)
@@ -480,48 +540,44 @@ export default function CosplayHunt({ convention, hunter, targets = [] }) {
 
       <main className="pb-10 pt-4.5">
         <p className="mb-3.5 px-4 font-mono text-[11px] uppercase tracking-wide text-parchment/50">
-          {convention?.name ? `${convention.name} · ` : ""}
-          {remaining} of {targets.length} target{targets.length === 1 ? "" : "s"} in range
+          {convention?.name ? `${convention.name}` : "Convention Info Unavailable"}
         </p>
 
-        {targets.length === 0 ? (
-          <div className="mx-4 my-7 rounded-2xl border border-dashed border-parchment/15 px-4.5 py-6 text-center">
-            <p className="font-body text-[15px] text-parchment">
-              No targets assigned right now.
-            </p>
-            <p className="mt-1.5 font-body text-[13px] text-parchment/50">
-              Check back after the next reset for a fresh list.
-            </p>
-          </div>
-        ) : (
-          <ul
+        <ul
             role="list"
             className="m-0 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2.5 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {targets.map((target) => (
+            {displayTargets.map((target, i) => (
+              target ?
               <TargetCard
-                key={target.id}
+                key={`${target.id}-${i}`}
                 target={target}
                 captured={capturedIds.has(target.id)}
                 onOpenInfo={setInfoTargetId}
-                onOpenCapture={setCaptureTargetId}
+                onOpenCapture={setCaptureTarget}
+              /> :
+              <BlankTarget
+                key={`blank-${i}`}
+                conventionId={convention?.id}
+                hunterId={hunter?.app_uid}
+                onNewTargets={setCurrentTargets}
               />
             ))}
           </ul>
-        )}
       </main>
 
-      {infoTarget && (
+      {infoTargetId && (
         <Modal labelledBy="target-info-title" onClose={() => setInfoTargetId(null)}>
-          <TargetInfoContent target={infoTarget} onClose={() => setInfoTargetId(null)} />
+          <TargetInfoContent target={infoTargetId} onClose={() => setInfoTargetId(null)} />
         </Modal>
       )}
 
       {captureTarget && (
-        <Modal labelledBy="capture-title" onClose={() => setCaptureTargetId(null)}>
+        <Modal labelledBy="capture-title" onClose={() => setCaptureTarget(null)}>
           <CaptureContent
+            conventionId={convention.id}
             target={captureTarget}
-            onClose={() => setCaptureTargetId(null)}
+            onClose={() => setCaptureTarget(null)}
             onSuccess={handleCaptureSuccess}
           />
         </Modal>

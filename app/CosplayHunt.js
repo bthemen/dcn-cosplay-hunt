@@ -8,7 +8,7 @@ export default function CosplayHunt({ convention, hunter }) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
-//   const [convention, setConventions] = useState({});
+  //const [convention, setConventions] = useState({});
 
   const [form, setForm] = useState({
     name: "",

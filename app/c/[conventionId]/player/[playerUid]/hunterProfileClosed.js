@@ -1,27 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-function initialsFor(name) {
-  if (!name) return "??";
-  const parts = name.trim().split(/\s+/);
-  return parts.length === 1
-    ? parts[0].slice(0, 2).toUpperCase()
-    : (parts[0][0] + parts[1][0]).toUpperCase();
-}
-
 // ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 export default function HunterProfileClosed({ convention, hunter, targets = [] }) {
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [capturedIds, setCapturedIds] = useState(() => new Set());
-  const [score, setScore] = useState(hunter?.score ?? 0);
-
-  const hunterPhotoUrl =
-    convention?.id && hunter?.app_uid
-      ? `/c/${convention.id}/player/${hunter.app_uid}/photo`
-      : null;
 
   return (
     <div className="bg-grain relative mx-auto min-h-screen max-w-[560px] bg-ink bg-repeat font-body text-parchment">
