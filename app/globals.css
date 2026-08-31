@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ink text-parchment font-body;
+  }
+  h1, h2, h3 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.25em] text-flare;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-sm bg-flare px-5 py-2.5
+           font-mono text-sm uppercase tracking-wider text-ink font-bold
+           transition-transform hover:-translate-y-0.5 hover:bg-flare/90
+           active:translate-y-0 disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-sm border border-parchment/30 px-5 py-2.5
+           font-mono text-sm uppercase tracking-wider text-parchment
+           transition-colors hover:border-flare hover:text-flare;
+  }
+
+  .field-input {
+    @apply w-full rounded-sm border border-parchment/20 bg-ink-light px-4 py-2.5
+           font-body text-parchment placeholder:text-parchment/40
+           focus:border-flare focus:outline-none focus:ring-1 focus:ring-flare;
+  }
+
+  .card-shell {
+    @apply rounded-sm border border-parchment/15 bg-ink-light p-6;
+  }
+
+  /* Ink-stamp mark used on a "spotted" bingo square */
+  .stamp {
+    @apply pointer-events-none absolute inset-0 flex items-center justify-center;
+  }
+
+  .stamp-mark {
+    @apply rotate-[-8deg] rounded-sm border-4 border-flare px-3 py-1
+           font-display text-lg font-bold uppercase tracking-wider text-flare;
+    text-shadow: 0 0 1px rgba(255, 107, 53, 0.5);
+  }
+}
