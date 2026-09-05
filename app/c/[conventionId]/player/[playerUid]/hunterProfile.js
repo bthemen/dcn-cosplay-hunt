@@ -217,7 +217,7 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
           {target?.character || "Unidentified cosplayer"}
         </h3>
         <p className="mt-1 font-body text-sm text-parchment/60">
-          {target?.name ? `Played by ${target?.name}` : "Identity unconfirmed"}
+          {target?.name ? `From ${target?.series}` : "Unidentified series"}
         </p>
       </div>
 
