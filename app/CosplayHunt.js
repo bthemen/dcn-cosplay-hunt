@@ -16,7 +16,7 @@ export default function CosplayHunt({ convention, hunter }) {
     character: "",
     series: "",
     description: "",
-    invisible: true,
+    invisible: false,
     photo: null,
   });
 
