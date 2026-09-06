@@ -20,7 +20,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Cosplay Safari | Spot the Cosplay",
+  title: "Cosplay Hunt | Spot the Cosplay",
   description: "Field guide bingo for spotting cosplayers at your convention.",
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
           <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
             <a href="/" className="flex items-baseline gap-2">
               <span className="font-display text-xl font-bold tracking-tight">
-                Cosplay Safari
+                Cosplay Hunt
               </span>
               <span className="eyebrow hidden sm:inline">Field Guide Edition</span>
             </a>

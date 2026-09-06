@@ -20,6 +20,12 @@ export default function CosplayHunt({ convention, hunter }) {
     photo: null,
   });
 
+  const formattedDate = new Date(convention.start_date).toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   function updateForm(field, value) {
     setForm((prev) => ({
       ...prev,
@@ -63,16 +69,16 @@ export default function CosplayHunt({ convention, hunter }) {
       setSaving(false);
     }
   }
-    
-      // setForm({
-      //   name: "",
-      //   contact: "",
-      //   character: "",
-      //   series: "",
-      //   description: "",
-      //   invisible: true,
-      //   photo: null,
-      // });
+
+  // setForm({
+  //   name: "",
+  //   contact: "",
+  //   character: "",
+  //   series: "",
+  //   description: "",
+  //   invisible: true,
+  //   photo: null,
+  // });
 
   return (
     <main className="min-h-screen">
@@ -83,12 +89,15 @@ export default function CosplayHunt({ convention, hunter }) {
           {/* Replace this with your convention logo/banner */}
           <div className="flex h-full w-full items-center justify-center bg-parchment/5">
             <div className="text-center opacity-30">
-              <p className="font-display text-6xl font-bold">
-                CONVENTION LOGO
-              </p>
-              <p className="mt-2 text-sm uppercase tracking-[0.3em]">
-                Your convention here
-              </p>
+              <img
+                src={convention.logo_url}
+                style={{
+                  display: 'block',
+                  margin: 'auto',
+                  width: '80%',
+                  height: 'auto',
+                }}
+              />
             </div>
           </div>
 
@@ -97,8 +106,14 @@ export default function CosplayHunt({ convention, hunter }) {
         </div>
 
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          {<p className="eyebrow mb-4">
-            {convention.name} · {convention.start_date} – {convention.end_date}
+          <p className="eyebrow mb-4">
+            {convention.name}{convention.theme && `: ${convention.theme}`}
+          </p>
+          {<p className="eyebrow mb-4 text-white">
+            {formattedDate} {convention.times}
+          </p>}
+          {<p className="eyebrow mb-4 text-white">
+            {convention.venue}
           </p>}
 
           <h1 className="font-display text-6xl font-bold tracking-tight sm:text-8xl">
@@ -116,14 +131,17 @@ export default function CosplayHunt({ convention, hunter }) {
           >
             Join The Game
           </button>}
-          {!!hunter && <div style={{display: "flex"}}>
-            Welcome back, {hunter.name}
+          {!!hunter && <div style={{ display: "flex flex-col items-center" }}>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-parchment/70 sm:text-xl">
+              Welcome back, {hunter.name}
+            </p>
+
             <a href={`c/${convention.id}/player/${hunter.app_uid}`}><button
-            type="link"
-            className="btn-primary mt-10 px-8 py-4 text-lg"
-          >
-            Go to my targets
-          </button></a></div>}
+              type="link"
+              className="btn-primary mt-10 px-8 py-4 text-lg"
+            >
+              Go to my targets
+            </button></a></div>}
         </div>
       </section>
 
