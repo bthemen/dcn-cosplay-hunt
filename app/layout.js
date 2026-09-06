@@ -41,8 +41,8 @@ export default function RootLayout({ children }) {
             </nav>
           </div>
         </header>
-        <main className="mx-auto max-w-5xl px-6 py-10">{children}</main>
-        <footer className="mx-auto max-w-5xl px-6 py-10 text-xs text-parchment/40">
+        <main className="mx-auto max-w-5xl px-6 py-4">{children}</main>
+        <footer className="mx-auto max-w-5xl px-6 py-4 text-xs text-parchment/40">
           Built for spotting cosplayers, one square at a time.
         </footer>
       </body>
