@@ -11,7 +11,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { NR_TARGETS } from "@/lib/constants";
-import { checkPlayerCode, getHunterTargetIds, getTargetInformation, requestNewTargetAssignment } from "@/app/actions/target";
+import { checkPlayerCode, getHunterTargetIds, getTargetInformation, performCapture, requestNewTargetAssignment } from "@/app/actions/target";
 import { targetListFromString } from "@/lib/targetList";
 
 function initialsFor(name) {
@@ -350,7 +350,7 @@ function TargetInfoContent({ target, onClose }) {
   );
 }
 
-function CaptureContent({ conventionId, target, onClose, onSuccess }) {
+function CaptureContent({ conventionId, hunter, target, onClose, onSuccess }) {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("idle"); // idle | checking | success | error
 
@@ -359,7 +359,7 @@ function CaptureContent({ conventionId, target, onClose, onSuccess }) {
     const correct = await checkPlayerCode(conventionId, target.app_uid, code);
     if (correct) {
       setStatus("success");
-      onSuccess(target.id);
+      onSuccess(conventionId, hunter.app_uid, target.app_uid);
       setTimeout(onClose, 900);
     } else {
       setStatus("error");
@@ -498,10 +498,11 @@ export default function HunterPage({ convention, hunter, targets }) {
   const [score, setScore] = useState(hunter?.score ?? 0);
   const [currentTargets, setCurrentTargets] = useState(targets);
 
-  function handleCaptureSuccess(conventionId, hunterId, targetId) {
-    
+  async function handleCaptureSuccess(conventionId, hunterId, targetId) {
+    const { targets, score } = await performCapture(conventionId, hunterId, targetId);
     setCapturedIds((prev) => new Set(prev).add(targetId));
-    setScore((s) => s + 1);
+    setCurrentTargets(targets);
+    setScore(score);
   }
 
   const blanksCount = Math.max(0, NR_TARGETS - currentTargets.length);
@@ -576,6 +577,7 @@ export default function HunterPage({ convention, hunter, targets }) {
         <Modal labelledBy="capture-title" onClose={() => setCaptureTarget(null)}>
           <CaptureContent
             conventionId={convention.id}
+            hunter={hunter}
             target={captureTarget}
             onClose={() => setCaptureTarget(null)}
             onSuccess={handleCaptureSuccess}
