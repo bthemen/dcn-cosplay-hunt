@@ -301,7 +301,7 @@ export default function CosplayHunt({ convention, hunter }) {
                       onChange={(e) =>
                         updateForm("character", e.target.value)
                       }
-                      required
+                      required={!form.invisible}
                     />
                   </div>
 
@@ -322,7 +322,7 @@ export default function CosplayHunt({ convention, hunter }) {
                       onChange={(e) =>
                         updateForm("series", e.target.value)
                       }
-                      required
+                      required={!form.invisible}
                     />
                   </div>
                 </div>
