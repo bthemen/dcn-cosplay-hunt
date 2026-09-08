@@ -186,7 +186,7 @@ export default function CosplayHunt({ convention, hunter }) {
                 Create your character
               </h2>
               <p className="mt-2 text-sm text-parchment/50">
-                Enter your cosplay details so other hunters can find you.
+                Enter your profile details so other hunters can find you.
               </p>
             </div>
 
@@ -227,7 +227,6 @@ export default function CosplayHunt({ convention, hunter }) {
                   placeholder="Email, Discord, Instagram, etc."
                   value={form.contact}
                   onChange={(e) => updateForm("contact", e.target.value)}
-                  required
                 />
               </div>
 
@@ -274,7 +273,7 @@ export default function CosplayHunt({ convention, hunter }) {
                     </span>
 
                     <span className="mt-1 block text-sm text-parchment/50">
-                      Hide my cosplay from the public hunt. If unchecked,
+                      Hide my profile from the public hunt. If unchecked,
                       you must provide a photo.
                     </span>
                   </span>
