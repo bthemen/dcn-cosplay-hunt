@@ -349,9 +349,9 @@ function TargetInfoContent({ target, onClose }) {
         </p>
       )}
 
-      <dl className="divide-y divide-parchment/10 border-t border-parchment/10">
-        <DetailRow label="Cosplayer" value={target.name || "Unconfirmed"} />
-      </dl>
+      <p>
+        See if you can spot {target.character}! Once you find them, ask for their 4-digit code to score points!
+      </p>
     </div>
   );
 }
