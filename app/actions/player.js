@@ -11,10 +11,10 @@ import { stringFromTargetList } from "@/lib/targetList";
 export async function createPlayer(conventionId, formData) {
     const name = formData.get("name");
     const contact = formData.get("contact");
-    const character = formData.get("character");
-    const series = formData.get("series");
     const description = formData.get("description");
     const invisible = formData.get("invisible") === "true";
+    const character = formData.get("character");
+    const series = formData.get("series");
     const photo = formData.get("photo");
 
     // Validate

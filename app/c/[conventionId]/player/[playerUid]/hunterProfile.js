@@ -421,12 +421,12 @@ function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
           className="h-16 w-16 rounded-2xl text-lg"
         />
         <div>
-          <Eyebrow>{hunter.series || "Unknown series"}</Eyebrow>
+          <Eyebrow>{hunter.series || "Invisible"}</Eyebrow>
           <h2
             id="hunter-profile-title"
             className="font-display text-[28px] leading-tight text-parchment"
           >
-            {hunter.character}
+            {hunter.character || hunter.name}
           </h2>
         </div>
       </div>
