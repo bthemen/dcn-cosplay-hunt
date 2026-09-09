@@ -18,11 +18,11 @@ export async function createPlayer(conventionId, formData) {
     const photo = formData.get("photo");
 
     // Validate
-    if (!name || !contact || !character || !series) {
+    if (!name) {
         throw new Error("Please fill in all required fields.");
     }
-    if (!invisible && !(photo instanceof File)) {
-        throw new Error("A photo is required when you are visible.");
+    if (!invisible && (!(photo instanceof File) && !(character instanceof File) && !(series instanceof File))) {
+        throw new Error("Please fill in all required fields.");
     }
 
     // Generate the player's permanent identifier on the server.
