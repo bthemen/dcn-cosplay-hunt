@@ -222,7 +222,7 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
       </div>
 
       <button
-        onClick={() => { onOpenCapture(target)}}
+        onClick={() => { onOpenCapture(target) }}
         disabled={captured}
         className={
           captured
@@ -239,9 +239,9 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
 
 
 function BlankTarget({ conventionId, hunterId, onNewTargets }) {
-    
+
   const [status, setStatus] = useState("idle"); // idle | loading | error
-    async function requestNewTarget() {
+  async function requestNewTarget() {
     setStatus("loading");
     try {
       const { newTarget, targets } = await requestNewTargetAssignment(conventionId, hunterId);
@@ -267,9 +267,9 @@ function BlankTarget({ conventionId, hunterId, onNewTargets }) {
         className="relative block aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-xl bg-ink"
       >
         <div className="flex h-full w-full items-center justify-center font-mono text-sm text-parchment/50">
-            ??
-          </div>
-        
+          ??
+        </div>
+
 
         <span className="absolute left-2.5 top-2.5 h-5 w-5 rounded-tl-sm border-l-2 border-t-2 border-parchment/85" />
         <span className="absolute right-2.5 top-2.5 h-5 w-5 rounded-tr-sm border-r-2 border-t-2 border-parchment/85" />
@@ -499,7 +499,7 @@ export default function HunterPage({ convention, hunter, targets }) {
   const [currentTargets, setCurrentTargets] = useState(targets);
 
   function handleCaptureSuccess(conventionId, hunterId, targetId) {
-    
+
     setCapturedIds((prev) => new Set(prev).add(targetId));
     setScore((s) => s + 1);
   }
@@ -544,15 +544,16 @@ export default function HunterPage({ convention, hunter, targets }) {
         </p>
 
         <ul
-            role="list"
-            className="m-0 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2.5 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {displayTargets.map((target, i) => (
-              target ?
+          role="list"
+          className="m-0 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2.5 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {displayTargets.map((target, i) => {
+            // console.log(setInfoTargetId);
+            return target ?
               <TargetCard
-                key={`${target.id}-${i}`}
+                key={`${target.app_uid}-${i}`}
                 target={target}
-                captured={capturedIds.has(target.id)}
+                captured={capturedIds.has(target.app_uid)}
                 onOpenInfo={setInfoTargetId}
                 onOpenCapture={setCaptureTarget}
               /> :
@@ -562,13 +563,14 @@ export default function HunterPage({ convention, hunter, targets }) {
                 hunterId={hunter?.app_uid}
                 onNewTargets={setCurrentTargets}
               />
-            ))}
-          </ul>
+          })}
+        </ul>
       </main>
 
       {infoTargetId && (
+
         <Modal labelledBy="target-info-title" onClose={() => setInfoTargetId(null)}>
-          <TargetInfoContent target={infoTargetId} onClose={() => setInfoTargetId(null)} />
+          <TargetInfoContent target={displayTargets.find((t) => t.app_uid === infoTargetId)} onClose={() => setInfoTargetId(null)} />
         </Modal>
       )}
 
