@@ -315,13 +315,19 @@ function TargetInfoContent({ target, onClose }) {
   return (
     <div className="relative pt-1">
       <ModalCloseButton onClose={onClose} />
+
       <div className="mb-4 flex aspect-[16/11] w-full items-center justify-center overflow-hidden rounded-2xl bg-ink">
         {showImage ? (
           <img
             src={target.photoUrl}
             alt={target.character}
             onError={() => setErrored(true)}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-center"
+            style={{
+              display: 'flex',
+              width: 'auto',
+              height: '120%',
+            }}
           />
         ) : (
           <span className="font-mono text-4xl text-parchment/40">
