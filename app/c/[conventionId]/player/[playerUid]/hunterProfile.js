@@ -222,7 +222,7 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
       </div>
 
       <button
-        onClick={() => { onOpenCapture(target)}}
+        onClick={() => { onOpenCapture(target) }}
         disabled={captured}
         className={
           captured
@@ -239,9 +239,9 @@ function TargetCard({ target, captured, onOpenInfo, onOpenCapture }) {
 
 
 function BlankTarget({ conventionId, hunterId, onNewTargets }) {
-    
+
   const [status, setStatus] = useState("idle"); // idle | loading | error
-    async function requestNewTarget() {
+  async function requestNewTarget() {
     setStatus("loading");
     try {
       const { newTarget, targets } = await requestNewTargetAssignment(conventionId, hunterId);
@@ -267,9 +267,9 @@ function BlankTarget({ conventionId, hunterId, onNewTargets }) {
         className="relative block aspect-[4/5] w-full cursor-pointer overflow-hidden rounded-xl bg-ink"
       >
         <div className="flex h-full w-full items-center justify-center font-mono text-sm text-parchment/50">
-            ??
-          </div>
-        
+          ??
+        </div>
+
 
         <span className="absolute left-2.5 top-2.5 h-5 w-5 rounded-tl-sm border-l-2 border-t-2 border-parchment/85" />
         <span className="absolute right-2.5 top-2.5 h-5 w-5 rounded-tr-sm border-r-2 border-t-2 border-parchment/85" />
@@ -411,6 +411,8 @@ function CaptureContent({ conventionId, hunter, target, onClose, onSuccess }) {
 }
 
 function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
     <div className="relative">
       <ModalCloseButton onClose={onClose} />
@@ -443,9 +445,96 @@ function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
         <DetailRow label="Score" value={score} />
         <DetailRow label="Contact" value={hunter.contact || "—"} />
       </dl>
+
+      
+
+      <div className="mt-2 flex justify-center">
+        <a href="#">
+          <button
+            type="button"
+            className="btn-primary px-5 py-2.5 text-sm"
+            onClick={() => setShowConfirm(true)}
+          >
+            Go invisible
+          </button>
+        </a>
+      </div>
+
+      {showConfirm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowConfirm(false)}
+        >
+          {/* Pop-up Box (onClick stopPropagation prevents clicks inside from closing it) */}
+          <div
+            className="relative w-full max-w-sm rounded-2xl bg-[#1e2342] p-6 text-center shadow-xl border border-parchment/10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Cross Button */}
+            <button
+              type="button"
+              onClick={() => setShowConfirm(false)}
+              className="absolute top-4 right-4 text-parchment/60 hover:text-parchment text-lg leading-none"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            <p className="font-body text-base text-parchment mt-2 mb-6">
+              Are you sure you want to go invisible? It is currently not possible to return to visible mode.
+            </p>
+
+            {/* Side-by-side Buttons */}
+            <div className="flex items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowConfirm(false)}
+                className="px-4 py-2 text-sm rounded-xl border border-parchment/20 text-parchment/80 hover:bg-parchment/10 transition-colors"
+              >
+                No, take me back!
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowConfirm(false)}
+                className="btn-primary px-4 py-2 text-sm"
+              >
+                Yes, I understand
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+{/* <div className="rounded-lg border border-parchment/10 p-4">
+                <label
+                  htmlFor="invisible"
+                  className="flex cursor-pointer items-start gap-3"
+                >
+                  <input
+                    id="invisible"
+                    type="checkbox"
+                    checked={form.invisible}
+                    onChange={(e) =>
+                      updateForm("invisible", e.target.checked)
+                    }
+                    className="mt-1 h-4 w-4"
+                  />
+
+                  <span>
+                    <span className="block font-bold">
+                      Invisible
+                    </span>
+
+                    <span className="mt-1 block text-sm text-parchment/50">
+                      Hide my cosplay from the public hunt. If unchecked,
+                      you must provide a photo.
+                    </span>
+                  </span>
+                </label>
+              </div> */}
 
 // ---------------------------------------------------------------------------
 // Top mission bar
@@ -545,11 +634,11 @@ export default function HunterPage({ convention, hunter, targets }) {
         </p>
 
         <ul
-            role="list"
-            className="m-0 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2.5 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {displayTargets.map((target, i) => (
-              target ?
+          role="list"
+          className="m-0 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2.5 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {displayTargets.map((target, i) => (
+            target ?
               <TargetCard
                 key={`${target.id}-${i}`}
                 target={target}
@@ -563,8 +652,8 @@ export default function HunterPage({ convention, hunter, targets }) {
                 hunterId={hunter?.app_uid}
                 onNewTargets={setCurrentTargets}
               />
-            ))}
-          </ul>
+          ))}
+        </ul>
       </main>
 
       {infoTargetId && (
