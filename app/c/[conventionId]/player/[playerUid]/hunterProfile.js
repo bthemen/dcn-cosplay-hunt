@@ -412,16 +412,24 @@ function CaptureContent({ conventionId, hunter, target, onClose, onSuccess }) {
 
 function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   return (
     <div className="relative">
       <ModalCloseButton onClose={onClose} />
       <div className="mb-3.5 flex items-center gap-3.5">
-        <Avatar
-          src={photoUrl}
-          name={hunter.character}
-          className="h-16 w-16 rounded-2xl text-lg"
-        />
+        <button
+          type="button"
+          onClick={() => photoUrl && setShowPhotoModal(true)}
+          className="focus:outline-none focus:ring-2 focus:ring-parchment/50 rounded-2xl transition-transform active:scale-95"
+          title="Click to expand photo"
+        >
+          <Avatar
+            src={photoUrl}
+            name={hunter.character}
+            className="h-16 w-16 rounded-2xl text-lg cursor-pointer hover:opacity-90 transition-opacity"
+          />
+        </button>
         <div>
           <Eyebrow>{hunter.series || "Unknown series"}</Eyebrow>
           <h2
@@ -504,6 +512,53 @@ function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
           </div>
         </div>
       )}
+
+{/* Full Photo Modal */}
+      {showPhotoModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4"
+          onClick={() => setShowPhotoModal(false)}
+        >
+          <div
+            className="relative flex flex-col items-center max-w-lg w-full bg-[#1e2342] p-4 pt-10 rounded-2xl border border-parchment/10 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Cross Button */}
+            <button
+              type="button"
+              onClick={() => setShowPhotoModal(false)}
+              className="absolute top-3 right-4 text-parchment/60 hover:text-parchment text-xl leading-none"
+              aria-label="Close photo"
+            >
+              ✕
+            </button>
+
+            {/* Full Image Display */}
+            <div className="w-full max-h-[70vh] flex items-center justify-center overflow-hidden rounded-xl">
+              <img
+                src={photoUrl}
+                alt={hunter.character}
+                className="max-h-[70vh] w-auto max-w-full object-contain rounded-xl"
+              />
+            </div>
+
+            {/* Bottom-right action container */}
+            <div className="w-full flex justify-end mt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDeletePhoto) onDeletePhoto();
+                  setShowPhotoModal(false);
+                }}
+                className="px-4 py-2 text-sm rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-medium transition-colors"
+              >
+                Delete my photo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
