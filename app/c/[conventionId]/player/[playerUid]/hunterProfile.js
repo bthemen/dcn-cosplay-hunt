@@ -504,7 +504,7 @@ function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="btn-primary px-4 py-2 text-sm"
+                className="px-4 py-2 text-sm rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-medium transition-colors"
               >
                 Yes, I understand
               </button>
