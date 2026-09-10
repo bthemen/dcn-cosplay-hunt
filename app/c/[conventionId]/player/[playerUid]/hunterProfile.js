@@ -439,7 +439,7 @@ function HunterProfileContent({ hunter, score, photoUrl, onClose }) {
 
       <dl className="divide-y divide-parchment/10 border-t border-parchment/10">
         <DetailRow label="Hunter" value={hunter.name} />
-        <DetailRow label="Badge code" value={hunter.code} />
+        <DetailRow label="Code" value={hunter.code} />
         <DetailRow label="Score" value={score} />
         <DetailRow label="Contact" value={hunter.contact || "—"} />
       </dl>
